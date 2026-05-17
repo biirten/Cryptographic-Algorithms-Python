@@ -1,0 +1,54 @@
+from Crypto import Random
+from Crypto.PublicKey import RSA
+from Crypto.Cipher import PKCS1_OAEP
+import base64
+
+# RSA anahtarlarını oluşturma fonksiyonu
+def generate_keys():
+    # Anahtar uzunluğu 256'nın katı olmalı ve en az 1024 bit olmalı
+    modulus_length = 2048  # Daha güvenli olması için 2048 bit
+    privatekey = RSA.generate(modulus_length, Random.new().read)  # Özel anahtar oluşturma
+    publickey = privatekey.publickey()  # Açık anahtarı türetme
+    return privatekey, publickey
+
+# Mesajı şifreleme fonksiyonu
+def encrypt_message(a_message, publickey):
+    # Açık anahtar ile PKCS1_OAEP şifreleyici oluştur
+    cipher = PKCS1_OAEP.new(publickey)
+    # Mesajı UTF-8 formatında baytlara çevir ve şifrele
+    encrypted_msg = cipher.encrypt(a_message.encode('utf-8'))
+    # Şifrelenmiş mesajı Base64 ile kodla
+    encoded_encrypted_msg = base64.b64encode(encrypted_msg)
+    return encoded_encrypted_msg
+
+# Mesajı çözme fonksiyonu
+def decrypt_message(encoded_encrypted_msg, privatekey):
+    # Base64 ile kodlanmış şifreli mesajı çöz
+    decoded_encrypted_msg = base64.b64decode(encoded_encrypted_msg)
+    # Özel anahtar ile PKCS1_OAEP çözücü oluştur
+    cipher = PKCS1_OAEP.new(privatekey)
+    # Şifrelenmiş mesajı çöz ve UTF-8 formatına dönüştür
+    decoded_decrypted_msg = cipher.decrypt(decoded_encrypted_msg).decode('utf-8')
+    return decoded_decrypted_msg
+
+# Şifrelenmek istenen orijinal mesaj
+a_message = "Bu, RSA algoritmasının asimetrik kriptografideki kullanımını göstermektedir."
+
+# RSA anahtarlarını oluştur
+privatekey, publickey = generate_keys()
+
+# Mesajı şifrele ve ardından çöz
+encrypted_msg = encrypt_message(a_message, publickey)
+decrypted_msg = decrypt_message(encrypted_msg, privatekey)
+
+# Sonuçları yazdır
+# Özel anahtar ve uzunluğu
+print("%s - (%d)" % (privatekey.exportKey().decode('utf-8'), len(privatekey.exportKey())))
+# Açık anahtar ve uzunluğu
+print("%s - (%d)" % (publickey.exportKey().decode('utf-8'), len(publickey.exportKey())))
+# Orijinal mesaj ve uzunluğu
+print("Orijinal içerik: %s - (%d)" % (a_message, len(a_message))) 
+# Şifrelenmiş mesaj ve uzunluğu
+print("Şifrelenmiş mesaj: %s - (%d)" % (encrypted_msg.decode('utf-8'), len(encrypted_msg)))  
+ # Çözülmüş mesaj ve uzunluğu
+print("Çözülmüş mesaj: %s - (%d)" % (decrypted_msg, len(decrypted_msg)))  

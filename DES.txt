@@ -1,0 +1,29 @@
+from Crypto.Cipher import DES  # DES algoritması için gerekli modül
+from Crypto.Util.Padding import pad, unpad  # Veri doldurma işlemleri için modüller
+import os  # Rastgele anahtar ve IV oluşturmak için
+
+# Şifrelenecek veri (plaintext) tanımlanır ve UTF-8 formatında encode edilir
+data = "Bu bir DES şifreleme örneğidir".encode("utf-8")  # Türkçe karakterler için encoding
+print(f"Orijinal Veri: {data}")
+
+# 8 baytlık rastgele bir DES anahtarı oluşturulur
+key = os.urandom(8)  # DES anahtarı tam olarak 8 bayt olmalıdır
+print(f"Oluşturulan Anahtar: {key.hex()}")
+
+# DES şifreleme işlemi için 8 baytlık bir IV (başlatma vektörü) oluşturulur
+iv = os.urandom(8)  # Başlatma vektörü (IV) de 8 bayt olmalıdır
+print(f"Oluşturulan IV: {iv.hex()}")
+
+# DES şifreleme nesnesi CBC modunda başlatılır
+cipher = DES.new(key, DES.MODE_CBC, iv)
+
+# Veriler 8'in katı olacak şekilde doldurulur ve şifrelenir
+padded_data = pad(data, DES.block_size)  # Veri, 8 baytlık bloklara doldurulur
+ciphertext = cipher.encrypt(padded_data)  # Şifreleme işlemi
+print(f"Şifrelenmiş Veri: {ciphertext.hex()}")
+
+# Şifre çözme işlemi için aynı anahtar ve IV ile DES nesnesi oluşturulur
+decipher = DES.new(key, DES.MODE_CBC, iv)  # Aynı anahtar ve IV kullanılır
+decrypted_data = unpad(decipher.decrypt(ciphertext), DES.block_size)  # Şifre çözülüp doldurma kaldırılır
+print(f"Çözülen Veri: {decrypted_data.decode('utf-8')}")
+

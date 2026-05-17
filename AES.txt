@@ -1,0 +1,47 @@
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import pad, unpad
+from Crypto.Random import get_random_bytes
+import base64
+
+# Şifrelenecek mesaj
+mesaj = "AES algoritmasının uygulama örneği"
+
+# 256-bit (32 byte) rastgele bir anahtar oluşturuluyor
+# Anahtar, AES algoritması için gereklidir
+anahtar = get_random_bytes(32)
+
+# Şifreleme işlemi
+def sifreleme(mesaj, anahtar):
+    # AES algoritması CBC modu ile başlatılıyor
+    # Initialization Vector (IV) rastgele oluşturuluyor
+    iv = get_random_bytes(16)
+    sifreleyici = AES.new(anahtar, AES.MODE_CBC, iv)
+    
+    # Mesaj, AES algoritmasının gereksinimi olan blok boyutuna uygun hale getiriliyor
+    sifrelenmis_mesaj = sifreleyici.encrypt(pad(mesaj.encode('utf-8'), AES.block_size))
+    
+    # Şifrelenmiş mesaj ve IV birleştirilip döndürülüyor
+    return base64.b64encode(iv + sifrelenmis_mesaj).decode('utf-8')
+
+# Şifre çözme işlemi
+def sifre_cozme(sifrelenmis_mesaj, anahtar):
+    # Şifrelenmiş mesaj Base64 formatından çözülüyor
+    sifrelenmis_veri = base64.b64decode(sifrelenmis_mesaj)
+    
+    # IV ve şifrelenmiş mesaj ayrıştırılıyor
+    iv = sifrelenmis_veri[:16]
+    sifrelenmis_mesaj_kismi = sifrelenmis_veri[16:]
+    
+    # AES algoritması IV ile yeniden oluşturuluyor
+    sifre_cozucu = AES.new(anahtar, AES.MODE_CBC, iv)
+    
+    # Şifre çözülüp orijinal mesaj döndürülüyor
+    return unpad(sifre_cozucu.decrypt(sifrelenmis_mesaj_kismi), AES.block_size).decode('utf-8')
+
+# Mesaj şifreleniyor
+sifrelenmis_mesaj = sifreleme(mesaj, anahtar)
+print("Şifrelenmiş Mesaj:", sifrelenmis_mesaj)
+
+# Şifrelenmiş mesaj çözülüyor
+orijinal_mesaj = sifre_cozme(sifrelenmis_mesaj, anahtar)
+print("Orijinal Mesaj:", orijinal_mesaj)
