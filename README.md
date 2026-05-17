@@ -1,11 +1,11 @@
 # Cryptographic-Algorithms-Python
-# 🔐 Python ile Kriptografik Şifreleme Uygulamaları (AES, DES & RSA)
+# Python ile Kriptografik Şifreleme Uygulamaları (AES, DES & RSA)
 
 Bu proje, modern siber güvenlik ve veri güvenliği standartlarında sıkça kullanılan **Simetrik** ve **Asimetrik** şifreleme algoritmalarının Python dilinde çalışan temiz uygulama örneklerini içerir. Bilgisayar mühendisliği eğitimim kapsamında veri gizliliği ve kriptografi mantığını pratik etmek amacıyla geliştirilmiştir.
 
 ---
 
-## 🛠️ İçerik ve Kullanılan Algoritmalar
+##  İçerik ve Kullanılan Algoritmalar
 
 Proje kapsamında tek bir çatı altında toplanan 3 ana şifreleme yöntemi bulunmaktadır:
 
@@ -25,7 +25,7 @@ Proje kapsamında tek bir çatı altında toplanan 3 ana şifreleme yöntemi bul
 
 ---
 
-## 🚀 Teknolojiler ve Kütüphaneler
+##  Teknolojiler ve Kütüphaneler
 
 * **Programlama Dili:** Python 3.x
 * **Temel Kütüphane:** `pycryptodome` (Kriptografik işlemler için kullanılan modern Python paketi)
@@ -33,7 +33,7 @@ Proje kapsamında tek bir çatı altında toplanan 3 ana şifreleme yöntemi bul
 
 ---
 
-## 💻 Nasıl Çalıştırılır?
+##  Nasıl Çalıştırılır?
 
 Projeyi yerel bilgisayarınızda test etmek için gerekli kütüphaneyi yüklemeniz yeterlidir:
 
